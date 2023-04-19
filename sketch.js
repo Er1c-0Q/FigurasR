@@ -13,25 +13,25 @@ class Figura {
       if (this.posicion.x + this.ancho >= 400)
         {  
           let valor = random(3); 
-          this.velocidad.x = this.velocidad.x * +valor;
-         this.velocidad.y = this.velocidad.y * -valor;
+          this.velocidad.x = this.velocidad.x * -valor;
+         this.velocidad.y = this.velocidad.y * +valor;
         }
 
         if (this.posicion.x + this.ancho <= 400)
+        {  
+          let valor = random(3); 
+          this.velocidad.x = this.velocidad.x * -valor;
+         this.velocidad.y = this.velocidad.y * +valor;
+        }
+
+        if (this.posicion.y + this.ancho >= 400)
         {  
           let valor = random(3); 
           this.velocidad.x = this.velocidad.x * +valor;
          this.velocidad.y = this.velocidad.y * -valor;
         }
 
-        if (this.posicion.x + this.ancho >= 400)
-        {  
-          let valor = random(3); 
-          this.velocidad.x = this.velocidad.x * +valor;
-         this.velocidad.y = this.velocidad.y * -valor;
-        }
-
-        if (this.posicion.x + this.ancho <= 400)
+        if (this.posicion.y + this.ancho <= 400)
         {  
           let valor = random(3); 
           this.velocidad.x = this.velocidad.x * +valor;
