@@ -1,124 +1,120 @@
 class Figura {
-   constructor(x, y, alto, ancho, vx, vy) {
-    this.posicion = createVector(x,y);
-    this.alto = alto;
+  constructor(x, y, ancho, alto, velx, vely) {
+    this.posicion = createVector(x, y);
     this.ancho = ancho;
-    this.fillred = 255;
-    this.fillgreen = 87;
-    this.fillblue = 57;
-    this.velocidad = createVector(vx,vy);
+    this.alto = alto;
+    this.velocidad = createVector(velx, vely);
   }
-  update()
-  {
-      if (this.posicion.x + this.ancho >= 400)
-        {  
-          let valor = random(3); 
-          this.velocidad.x = this.velocidad.x * -1;
-         this.velocidad.y = this.velocidad.y * valor;
-        }
+  
+  // Método vacío para ser redefinido en subclases
+  draw() {}
 
-        if (this.posicion.x + this.ancho <= 400)
-        {  
-          let valor = random(3); 
-          this.velocidad.x = this.velocidad.x * -1;
-         this.velocidad.y = this.velocidad.y * valor;
-        }
+  // Método vacío para ser redefinido en subclases
+  update() {}
+}
 
-        if (this.posicion.y + this.ancho >= 400)
-        {  
-          let valor = random(3); 
-          this.velocidad.x = this.velocidad.x * valor;
-         this.velocidad.y = this.velocidad.y * -1;
-        }
+class Pelota extends Figura {
+  constructor(x, y, ancho, alto, velx, vely) {
+    super(x, y, ancho, alto, velx, vely);
+    this.color = color('red');
+    this.forma = 'circulo'; // nueva variable de instancia para la forma actual
+  }
 
-        if (this.posicion.y + this.ancho <= 400)
-        {  
-          let valor = random(3); 
-          this.velocidad.x = this.velocidad.x * valor;
-         this.velocidad.y = this.velocidad.y * -1;
-        }
+  draw() {
+    fill(this.color);
+    if (this.forma === 'circulo') { // cambiar la forma según la variable "forma"
+      ellipse(this.posicion.x, this.posicion.y, this.ancho, this.alto);
+    } else {
+      triangle(this.posicion.x - this.ancho / 2, this.posicion.y + this.alto / 2,
+               this.posicion.x + this.ancho / 2, this.posicion.y + this.alto / 2,
+               this.posicion.x, this.posicion.y - this.alto / 2);
+    }
+  }
 
-      this.posicion.add(this.velocidad);
+  update() {
+    if (this.posicion.x + this.ancho >= width || this.posicion.x <= 0) {
+      this.velocidad.x *= -1;
+    }
+
+    if (this.posicion.y + this.alto >= height || this.posicion.y <= 0) {
+      this.velocidad.y *= -1;
+    }
+
+    this.posicion.add(this.velocidad);
+  }
+
+  checkCollision(racket) {
+    if (this.posicion.y + this.alto >= racket.posicion.y &&
+        this.posicion.y <= racket.posicion.y + racket.alto &&
+        this.posicion.x + this.ancho >= racket.posicion.x &&
+        this.posicion.x <= racket.posicion.x + racket.ancho) {
+      this.velocidad.y *= -1;
+      score++;
+      racket.changeColor();
+
+      if (this.forma === 'circulo') { // cambiar la forma de la pelota
+        this.ancho = this.ancho;
+        this.alto = this.alto;
+        this.forma = 'triangulo';
+      } else {
+        this.ancho = this.ancho;
+        this.alto = this.alto;
+        this.forma = 'circulo';
+      }
+
+      return true;
+    }
+    return false;
+    
   }
   
 }
 
-class Rectangulo extends Figura{
-  constructor(x, y, alto, ancho, vx, vy) {
-      super(x, y, alto, ancho, vx, vy);
+class Racket extends Figura {
+  constructor(x, y, ancho, alto, velx, vely) {
+    super(x, y, ancho, alto, velx, vely);
+    this.color = color('black');
   }
-  
-draw()
-  {
-fill(this.fillred,this.fillgreen,this.fillblue);
-rect(this.posicion.x,this.posicion.y,this.alto,this.ancho);
+
+  draw() {
+    fill(this.color);
+    rect(this.posicion.x, this.posicion.y, this.ancho, this.alto);
+  }
+
+  update() {
+    let nuevaPosicion = mouseX - this.ancho / 2;
+    if (nuevaPosicion < 0) {
+      nuevaPosicion = 0;
+    } else if (nuevaPosicion + this.ancho > width) {
+      nuevaPosicion = width - this.ancho;
+    }
+    this.posicion.x = nuevaPosicion;
+  }
+
+  changeColor() {
+    this.color = color(random(255), random(255), random(255));
   }
 }
 
-class Elipse extends Figura{
-  constructor(x, y, alto, ancho, vx, vy) {
-      super(x, y, alto, ancho, vx, vy);
-  }
-  
-draw()
-  {
-fill(this.fillred,this.fillgreen,this.fillblue);
-ellipse(this.posicion.x,this.posicion.y,this.alto,this.ancho);
-  }
-}
-
-var figuras = [];
-var dibujando = 'circulo';
-var btnCirculo = null;
-var btnRectangulo = null;
-
-
-function mouseClicked() {
-  // Se crea un objeto según la opción actual
-if (mouseY > 25)
-  {
-  if (dibujando == 'circulo')
-    figuras.push(new Elipse(mouseX,mouseY,20,20,3,1));
-  else if (dibujando == 'rectangulo')
-    figuras.push(new Rectangulo(mouseX,mouseY,20,20,2,1));
-  }
-
-  return false;
-}
+let score = 0;
+let racket, pelota;
 
 function setup() {
-  createCanvas(400, 400);
-  
-  btnCirculo = createButton('Circulo');
-  btnCirculo.position(0, 0);
-  btnCirculo.mousePressed(changeCirculo);
-  btnCirculo.style( 'background-color','#cccccc');
-  
-  btnRectangulo = createButton('Rectangulo');
-  btnRectangulo.position(75, 0);
-  btnRectangulo.mousePressed(changeRectangulo);
+  createCanvas(400, 320);
+  racket = new Racket((width / 2 )- 30, height - 10, 60, 7);
+  pelota = new Pelota(width / 2, height / 2, 20, 20, 4, -4);
 }
 
-function changeCirculo()
-   {
-     btnCirculo.style( 'background-color','#cccccc');
-     btnRectangulo.style( 'background-color','#f0f0f0');
-     dibujando = 'circulo';
-   }
-function changeRectangulo()
-   {
-     btnRectangulo.style( 'background-color','#cccccc');
-     btnCirculo.style( 'background-color','#f0f0f0');
-     dibujando = 'rectangulo';
-   }
-
- 
-
 function draw() {
-  background(220);
-  figuras.forEach((fig) => 
-   {
-    fig.draw();
-    fig.update();
-   });
+  background(255);
+  pelota.draw();
+  pelota.update();
+  if (pelota.checkCollision(racket)) {
+    score++;
+  }
+  racket.draw();
+  racket.update();
+  fill(217, 195, 247);
+  textSize(16);
+  text(`Score: ` + score, 10, 25);
 }
