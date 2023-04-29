@@ -17,5 +17,9 @@ Para poder hacer que la racketa se mantuviera solamente en la posición x, el el
 Y en la "función setup" creé dos objetos una pelota y una racketa en donde definimos sus cordenadas, tamaño y velocidad en X e Y.
 en a "función draw" mandé a llamar a los métodos "draw" y "update", además implenté un  contador para que cada que vez que la pelota colisionara con la racketa, éste aumentara en 1.
 
+# UML
+![image](https://user-images.githubusercontent.com/124117640/235286287-e6135ba3-c936-47b4-9da8-5961982b1fe4.png)
+
+
 ### Referencia
 https://youtu.be/35ePfx14QeE
