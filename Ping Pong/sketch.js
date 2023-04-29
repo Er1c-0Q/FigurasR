@@ -73,7 +73,7 @@ class Pelota extends Figura {
 class Racket extends Figura {
   constructor(x, y, ancho, alto, velx, vely) {
     super(x, y, ancho, alto, velx, vely);
-    this.color = color('black');
+    this.color = color('255');
   }
 
   draw() {
@@ -107,7 +107,7 @@ function setup() {
 }
 
 function draw() {
-  background(255);
+  background(0);
   pelota.draw();
   pelota.update();
   if (pelota.checkCollision(racket)) {
@@ -116,6 +116,6 @@ function draw() {
   racket.draw();
   racket.update();
   fill(217, 195, 247);
-  textSize(16);
+  textSize(25);
   text(`Score: ` + score, 10, 25);
 }
