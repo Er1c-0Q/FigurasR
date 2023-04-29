@@ -1,2 +1,2 @@
 # Figuras
-Ejemplo de p5js
+Todo está en la carpeta de Ping Pong :)
